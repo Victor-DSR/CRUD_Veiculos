@@ -1,0 +1,6 @@
+-- GPT Perguntas:
+- 1° Analise este código (7 vezes, arquivos das duas ultimas tarefas).
+- 2° Quais informações seriam necessarias para cadastrar veiculos, desenvolva no formato de três CRUDs diferentes.
+- 3° Adicione os IDs que seriam necessarios no banco de dados para estes três cruds.
+- 4° Crie o HTML com bootsrap basico deste crud. (CRUD Veiculos)
+- 5° Analise este código e encontre possiveis erros
