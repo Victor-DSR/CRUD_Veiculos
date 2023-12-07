@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $veiculos->id = mysqli_insert_id($conexao); //retorna o último id gerado
         echo json_encode($veiculos);
     } else {
-        die("Problemas ao inser uma veiculos. Erro: " . mysqli_errno($conexao) . " " . mysqli_error($conexao));
+        die("Problemas ao inserir um veiculo. Erro: " . mysqli_errno($conexao) . " " . mysqli_error($conexao));
     }
 } else if ($_SERVER['REQUEST_METHOD'] == "PUT"){
     $sql = "UPDATE veiculos SET marca='$veiculos->marca', modelo='$veiculos->modelo', cor='$veiculos->ano', tamanho='$veiculos->cor' WHERE id='$veiculos->id'";

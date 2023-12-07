@@ -15,21 +15,23 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="marca">Marca</label>
-                    <input type="text" class="form-control" id="marca" required>
+                    <input type="text" class="form-control" name="marca" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="modelo">Modelo</label>
-                    <input type="text" class="form-control" id="modelo" required>
+                    <input type="text" class="form-control" name="modelo" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="ano">Ano</label>
-                    <input type="number" class="form-control" id="ano" required>
+                    <input type="number" class="form-control" name="ano" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label for="cor">Cor</label>
-                    <input type="text" class="form-control" id="cor" required>
+                    <input type="text" class="form-control" name="cor" required>
                 </div>
             </div>
+            <div class="form-group col-md-4">
+                    <label>ID: <input class="form-control" type="number" name="id" readonly></label></div>
             <button type="button" class="btn btn-primary" onclick="salvarVeiculo()">Salvar Veículo</button>
         </form>
 
@@ -94,26 +96,32 @@
             }
         }
 
-        function excluirVeiculo(veiculo){
-            let tbody = document.getElementById
+        function excluirVeiculo(veiculoId) {
+    let tbody = document.getElementByName("veiculos");
+    for (const tr of tbody.children) {
+        if (tr.children[0].innerText == veiculoId) {
+            tbody.removeChild(tr);
+            break;
         }
+    }
+}
 
-        function salvarVeiculo(event) {
+        function salvarVeiculo(evt) {
             event.preventDefault();
             let form = document.getElementById("veiculoForm");
             let tbody = document.getElementById("veiculos");
             let veiculo = Object.fromEntries(new FormData(form).entries());
 
-            if (veiculo.id == "") { //inserir novo veiculo
+            if (veiculo.id == "") { 
                 fetch("salvar.php", {
-                    method: "POST", //forma de envio
-                    body: JSON.stringify(veiculo), //informações a serem enviadas
+                    method: "POST", 
+                    body: JSON.stringify(veiculo), 
                     headers: { 'Content-type': "application/json; charset=UTF-8" }
                 })
                     .then(response => response.json())//converte para json
                     .then(veiculo => inserirVeiculo(veiculo))
                     .catch(error => console.log(error));
-            } else { //editar veiculo
+            } else { 
                 fetch("salvar.php", {
                     method: "PUT",
                     body: JSON.stringify(veiculo),
