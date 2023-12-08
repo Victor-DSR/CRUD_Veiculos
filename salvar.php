@@ -1,35 +1,25 @@
 <?php
 include_once("funcoes.php");
-$data = json_decode(file_get_contents("php://input"), true);
-if ($_SERVER["REQUEST_METHOD"] == "POST" || $_SERVER["REQUEST_METHOD"] == "PUT") {
-    $json = file_get_contents('php://input');
-    $veiculo = json_decode($json, true);
+$conexao = conectar();
+$veiculos = json_decode(file_get_contents("php://input"));
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $sql = "INSERT INTO veiculos (marca, modelo, ano, cor) VALUES (?, ?, ?, ?)";
-        $stmt = mysqli_prepare(conectar(), $sql);
-        mysqli_stmt_bind_param($stmt, "ssis", $veiculo['marca'], $veiculo['modelo'], $veiculo['ano'], $veiculo['cor']);
-        header("Content-Type: application/json");
-        echo json_encode($data);
-    } elseif ($_SERVER["REQUEST_METHOD"] == "PUT") {
-        // Atualizar um veículo existente
-        $sql = "UPDATE veiculos SET marca=?, modelo=?, ano=?, cor=? WHERE id=?";
-        $stmt = mysqli_prepare(conectar(), $sql);
-        mysqli_stmt_bind_param($stmt, "ssisi", $veiculo['marca'], $veiculo['modelo'], $veiculo['ano'], $veiculo['cor'], $veiculo['id']);
-    }
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $sql = "INSERT INTO veiculos (marca, modelo, ano,cor) VALUES ('$veiculos->marca', '$veiculos->modelo', '$veiculos->ano','$veiculos->cor')";
+    $result = mysqli_query($conexao, $sql);
 
-
-    if (mysqli_stmt_execute($stmt)) {
-        $veiculo['id'] = ($_SERVER["REQUEST_METHOD"] == "POST") ? mysqli_insert_id(conectar()) : $veiculo['id'];
-        echo json_encode($veiculo);
+    if ($result == true) {
+        $veiculos->id = mysqli_insert_id($conexao); //retorna o último id gerado
+        echo json_encode($veiculos);
     } else {
-        http_response_code(500); // Internal Server Error
-        echo json_encode(array("message" => "Erro ao salvar o veículo."));
+        die("Problemas ao inserir um veiculo. Erro: " . mysqli_errno($conexao) . " " . mysqli_error($conexao));
     }
+} else if ($_SERVER['REQUEST_METHOD'] == "PUT"){
+    $sql = "UPDATE veiculos SET marca='$veiculos->marca', modelo='$veiculos->modelo', cor='$veiculos->ano', tamanho='$veiculos->cor' WHERE id='$veiculos->id'";
+    $result = mysqli_query($conexao, $sql);
 
-    mysqli_stmt_close($stmt);
-} else {
-    http_response_code(400); // Bad Request
-    echo json_encode(array("message" => "Método de solicitação não permitido."));
+    if ($result == true) {
+        echo json_encode($veiculos);
+    } else {
+        die("Problemas ao inser uma veiculos. Erro: " . mysqli_errno($conexao) . " " . mysqli_error($conexao));
+    }
 }
-?>

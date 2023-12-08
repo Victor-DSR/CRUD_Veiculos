@@ -13,3 +13,4 @@
 - 10° Adapte este código ao CRUD Seguro. (função cadastrar manutenção)
 - 11° Adapte este HTML ao Crud Seguro. (HTML do Edit)
 - 12° Analise o código enviado anteriormente. (CRUD AJAX)
+- PS: Fizemos várias perguntas especificas aos erros como "SyntaxError: Unexpected token '<', '<br /><b>'... is not valid JSON" por exemplo.

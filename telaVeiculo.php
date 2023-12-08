@@ -75,16 +75,17 @@
                 }
             }
         }
+
         function excluir(evt) {
             let excluir = confirm("Tem certeza que deseja excluir esse veiculo?");
             if (excluir == true) {
                 let id = evt.currentTarget.paramId;
-                fetch("excluir.php",{
+                fetch("excluir.php?id=" + id, {
                 method: "GET",
                 headers: { 'Content-type': "application/json; charset=UTF-8" }
-            })
+                })
                 .then(response => response.json())
-                .then(veiculo => excluirVeiculo(veiculo, id))
+                .then(jaqueta => excluirVeiculo(veiculo, id))
                 .catch(error => console.log(error));
 
                 let tbody = document.getElementById("veiculos");
@@ -97,45 +98,43 @@
         }
 
         function excluirVeiculo(veiculoId) {
-    let tbody = document.getElementByName("veiculos");
-    for (const tr of tbody.children) {
-        if (tr.children[0].innerText == veiculoId) {
-            tbody.removeChild(tr);
-            break;
+            let tbody = document.getElementById("veiculos");
+            for (const tr of tbody.children) {
+                if (tr.children[0].innerText == veiculoId) {
+                    tbody.removeChild(tr);
+                    break;
+                }
+            }
         }
-    }
-}
 
-function salvarVeiculo() {
-    event.preventDefault();
-    let form = document.getElementById("veiculoForm");
-    let veiculo = Object.fromEntries(new FormData(form).entries());
+        function salvarVeiculo(evt) {
+            event.preventDefault();
+            let form = document.getElementById("veiculoForm");
+            let tbody = document.getElementById("veiculos");
+            let veiculo = Object.fromEntries(new FormData(form).entries());
 
-    if (veiculo.id == "") { 
-        // Inserir um novo veículo
-        fetch("salvar.php", {
-            method: "POST", 
-            body: JSON.stringify(veiculo), 
-            headers: { 'Content-type': "application/json; charset=UTF-8" }
-        })
-        .then(response => response.json())
-        .then(veiculo => inserirVeiculo(veiculo))
-        .catch(error => console.log(error));
-    } else { 
-        // Atualizar um veículo existente
-        fetch("salvar.php", {
-            method: "PUT",
-            body: JSON.stringify(veiculo),
-            headers: { 'Content-type': "application/json; charset=UTF-8" }
-        })
-        .then(response => response.json())
-        .then(veiculo => alterarVeiculo(veiculo))
-        .catch(error => console.log(error));
-    }
-
-    form.reset();
-    return false;
-}
+            if (veiculo.id == "") {
+                fetch("salvar.php", {
+                    method: "POST",
+                    body: JSON.stringify(veiculo),
+                    headers: { 'Content-type': "application/json; charset=UTF-8" }
+                })
+                    .then(response => response.json())
+                    .then(veiculo => inserirVeiculo(veiculo))
+                    .catch(error => console.log(error));
+            } else {
+                fetch("salvar.php", {
+                    method: "PUT",
+                    body: JSON.stringify(veiculo),
+                    headers: { 'Content-type': "application/json; charset=UTF-8" }
+                })
+                    .then(response => response.json())
+                    .then(veiculo => alterarVeiculo(veiculo))
+                    .catch(error => console.log(error));
+            }
+            form.reset();
+            return false;
+        }
 
         function inserirVeiculo(veiculo) {
             let tr = document.createElement("tr");
@@ -164,6 +163,20 @@ function salvarVeiculo() {
             btnExcluir.innerHTML = "Excluir";
             tdExcluir.appendChild(btnExcluir);
 
+            let tdSeguro = document.createElement("td");
+            let btnSeguro = document.createElement("button");
+            btnSeguro.addEventListener("click", irParaSeguro, false);
+            btnSeguro.paramId = veiculo.id;
+            btnSeguro.innerHTML = "Seguro";
+            tdSeguro.appendChild(btnSeguro);
+
+            let tdManutencao = document.createElement("td");
+            let btnManutencao = document.createElement("button");
+            btnManutencao.addEventListener("click", irParaManutencao, false);
+            btnManutencao.paramId = veiculo.id;
+            btnManutencao.innerHTML = "Manutenção";
+            tdManutencao.appendChild(btnManutencao);
+
             tr.appendChild(tdId);
             tr.appendChild(tdMarca);
             tr.appendChild(tdModelo);
@@ -171,37 +184,58 @@ function salvarVeiculo() {
             tr.appendChild(tdCor);
             tr.appendChild(tdEditar);
             tr.appendChild(tdExcluir);
+            tr.appendChild(tdSeguro);
+            tr.appendChild(tdManutencao);
             let tBody = document.getElementById("veiculos");
             tBody.appendChild(tr);
         }
 
-        function alterarVeiculo(veiculo) {
+        function alterarVeiculo(evt, veiculo) {
+    let id = veiculo.id;
     let tbody = document.getElementById("veiculos");
     for (const tr of tbody.children) {
-        if (tr.children[0].innerHTML == veiculo.id) {
-            tr.children[1].innerText = veiculo.marca;
-            tr.children[2].innerText = veiculo.modelo;
-            tr.children[3].innerText = veiculo.ano;
-            tr.children[4].innerText = veiculo.cor;
+        if (tr.children[0].innerHTML == id) {
+            let idField = document.getElementsByName("id")[0];
+            let marca = document.getElementsByName("marca")[0];
+            let modelo = document.getElementsByName("modelo")[0];
+            let ano = document.getElementsByName("ano")[0];
+            let cor = document.getElementsByName("cor")[0];
+            idField.value = veiculo.id;
+            marca.value = veiculo.marca;
+            modelo.value = veiculo.modelo;
+            ano.value = veiculo.ano;
+            cor.value = veiculo.cor;
             break;
         }
     }
 }
+
+
         function listarTodos() {
-            fetch("listar_veiculos.php", {
+            fetch("listar.php", {
                 method: "GET",
                 headers: { 'Content-type': "application/json; charset=UTF-8" }
             })
                 .then(response => response.json())
-                .then(veiculo => inserirVeiculos(veiculo))
+                .then(veiculos => inserirVeiculos(veiculos))
                 .catch(error => console.log(error));
         }
 
-        function inserirVeiculos(veiculos){
-            for (const veiculo of veiculos){
+        function inserirVeiculos(veiculos) {
+            for (const veiculo of veiculos) {
                 inserirVeiculo(veiculo);
             }
         }
-        document.addEventListener("DOMContentLoaded", () => {listarTodos();});
+
+        function irParaSeguro(evt) {
+            let idVeiculo = evt.currentTarget.paramId;
+                window.location.href = "telaSeguro.php?idVeiculo=" + idVeiculo;
+        }
+
+        function irParaManutencao(evt) {
+            let idVeiculo = evt.currentTarget.paramId;
+                window.location.href = "telaManutencao.php?idVeiculo=" + idVeiculo;
+        }
+        document.addEventListener("DOMContentLoaded", () => { listarTodos(); });
     </script>
 </html>
