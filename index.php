@@ -1,42 +1,35 @@
 <?php
-include "conectar.php";
+include_once('funcoes.php');
 session_start();
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    if ($conect->connect_error) {
-        die("Connection falhou: " . $conect->connect_error);
-    }
-    
-    $nome_usuario = $_POST['nome'];
+    $email = $_POST['email'];
     $senha = $_POST['senha'];
+    $usuario = verificarUsuarioSenha($email, $senha);
 
-    // Check user credentials
-    $sql = "SELECT id_usuario, senha FROM usuario WHERE nome = '$nome_usuario' and senha = $senha";
-    $result = $conect->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $hashed_senha = $row['senha'];
-
-        // Verify senha
-        if (password_verify($senha, $hashed_senha)) {
-            // senha is correct, set session variables or redirect to dashboard
-            $_SESSION['id_usuario'] = $row['id'];
-            header("Location: telaVeiculo.php.php");
-            exit();
-        } else {
-            echo "senha invalida";
-        }
+    if ($usuario) {
+        $_SESSION['usuario_id'] = $usuario['id'];
+        $_SESSION['usuario_nome'] = $usuario['nome'];
+        header("Location: telaVeiculo.php");
+        exit();
     } else {
-        echo "Usuario não encontrado";
+        echo '<div class="error-message">Usuário ou senha inválidos.</div>';
     }
-
-
 }
+function verificarUsuarioSenha($email, $senha) {
+    $sql = "SELECT * FROM usuario WHERE email='$email'";
+    $resultado = mysqli_query(conectar(), $sql);  
+    $dados = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
+    foreach ($dados as $usuario) {
+        if ($usuario['email'] = $email) {
+            if (password_verify($senha,$usuario['senha'])) {
+                return $usuario;
+            }
+        }
+    }
+    return null;
+}
+
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,14 +43,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container">
     <div class="image-container"></div>
     <form class="login-form" method="post" action="">
-        <h2>Login</h2>
+        <h2>Logar</h2>
         <div class="form-group">
-            <input type="text" name="nome" placeholder="Usuário" required>
+            <input type="text" name="email" placeholder="Email" required>
         </div>
         <div class="form-group">
             <input type="password" name="senha" placeholder="Senha" required>
         </div>
-        <button type="submit">Entrar</button>
+        <button type="submit">Entrar</button><br>
+        <div class="form-group" style="text-align:center;">
+            <a href="formcadastro.php">Cadastrar</a>
+        </div>
     </form>
 </div>
 

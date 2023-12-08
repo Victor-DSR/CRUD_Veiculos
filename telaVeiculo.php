@@ -106,34 +106,36 @@
     }
 }
 
-        function salvarVeiculo(evt) {
-            event.preventDefault();
-            let form = document.getElementById("veiculoForm");
-            let tbody = document.getElementById("veiculos");
-            let veiculo = Object.fromEntries(new FormData(form).entries());
+function salvarVeiculo() {
+    event.preventDefault();
+    let form = document.getElementById("veiculoForm");
+    let veiculo = Object.fromEntries(new FormData(form).entries());
 
-            if (veiculo.id == "") { 
-                fetch("salvar.php", {
-                    method: "POST", 
-                    body: JSON.stringify(veiculo), 
-                    headers: { 'Content-type': "application/json; charset=UTF-8" }
-                })
-                    .then(response => response.json())//converte para json
-                    .then(veiculo => inserirVeiculo(veiculo))
-                    .catch(error => console.log(error));
-            } else { 
-                fetch("salvar.php", {
-                    method: "PUT",
-                    body: JSON.stringify(veiculo),
-                    headers: { 'Content-type': "application/json; charset=UTF-8" }
-                })
-                    .then(response => response.json())
-                    .then(veiculo => alterarVeiculo(veiculo))
-                    .catch(error => console.log(error));
-            }
-            form.reset();
-            return false;
-        }
+    if (veiculo.id == "") { 
+        // Inserir um novo veículo
+        fetch("salvar.php", {
+            method: "POST", 
+            body: JSON.stringify(veiculo), 
+            headers: { 'Content-type': "application/json; charset=UTF-8" }
+        })
+        .then(response => response.json())
+        .then(veiculo => inserirVeiculo(veiculo))
+        .catch(error => console.log(error));
+    } else { 
+        // Atualizar um veículo existente
+        fetch("salvar.php", {
+            method: "PUT",
+            body: JSON.stringify(veiculo),
+            headers: { 'Content-type': "application/json; charset=UTF-8" }
+        })
+        .then(response => response.json())
+        .then(veiculo => alterarVeiculo(veiculo))
+        .catch(error => console.log(error));
+    }
+
+    form.reset();
+    return false;
+}
 
         function inserirVeiculo(veiculo) {
             let tr = document.createElement("tr");
@@ -173,18 +175,18 @@
             tBody.appendChild(tr);
         }
 
-        function alterarveiculo(veiculo) {
-            let tbody = document.getElementById("veiculos");
-            for (const tr of tbody.children) {
-                if (tr.children[0].innerHTML == id) {
-                    let id = document.getElementsByName("id")[0];
-                    let marca = document.getElementsByName("marca")[0];
-                    let modelo = document.getElementsByName("modelo")[0];
-                    let ano = document.getElementsByName("ano")[0];
-                    let cor = document.getElementsByName("cor")[0];
-                }
-            }
+        function alterarVeiculo(veiculo) {
+    let tbody = document.getElementById("veiculos");
+    for (const tr of tbody.children) {
+        if (tr.children[0].innerHTML == veiculo.id) {
+            tr.children[1].innerText = veiculo.marca;
+            tr.children[2].innerText = veiculo.modelo;
+            tr.children[3].innerText = veiculo.ano;
+            tr.children[4].innerText = veiculo.cor;
+            break;
         }
+    }
+}
         function listarTodos() {
             fetch("listar_veiculos.php", {
                 method: "GET",

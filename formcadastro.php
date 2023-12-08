@@ -12,7 +12,7 @@
 
 <div class="container">
     <div class="image-container"></div>
-    <form class="login-form" method="post" action="cadastro.php">
+    <form class="login-form" method="post" action="funcoes.php">
         <h2>Login</h2>
         <div class="form-group">
             <input type="text" name="nome" placeholder="Usuário" required>
@@ -23,7 +23,7 @@
         <div class="form-group">
             <input type="email" name="email" placeholder="Email" required>
         </div>
-        <button type="submit">Entrar</button>
+        <button type="submit" name="cadUsu">Entrar</button>
     </form>
 </div>
 

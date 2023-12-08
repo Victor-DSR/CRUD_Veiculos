@@ -25,6 +25,15 @@ if (isset($_POST['cadManu'])) {
     mysqli_query(conectar(), $sql);
     header("location:telaVeiculo.php");
 }
+if (isset($_POST['cadUsu'])) {
+$nome = $_POST['nome'];
+$email = $_POST['email'];
+$senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); 
+$sql = "INSERT INTO usuario (nome, email, senha) 
+        VALUES ('$nome', '$email', '$senha')";
+mysqli_query(conectar(), $sql);
+header("location:index.php");
+}
 if (isset($_POST['cadSeg'])) {
     $idVeiculo = $_POST['veiculo'];
     $seguradora = $_POST['seguradora'];

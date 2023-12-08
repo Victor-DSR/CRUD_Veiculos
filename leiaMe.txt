@@ -1,3 +1,5 @@
+--- João Victor dos Santos Rodrigues
+--- Marcio Vinicius Franchini
 -- GPT Perguntas:
 - 1° Analise este código (7 vezes, arquivos das duas ultimas tarefas).
 - 2° Quais informações seriam necessarias para cadastrar veiculos, desenvolva no formato de três CRUDs diferentes.
@@ -10,3 +12,4 @@
 - 9° Usando este código, crie um botão que vá para a tela de CRUD Seguro com o ID do Veiculo.
 - 10° Adapte este código ao CRUD Seguro. (função cadastrar manutenção)
 - 11° Adapte este HTML ao Crud Seguro. (HTML do Edit)
+- 12° Analise o código enviado anteriormente. (CRUD AJAX)
