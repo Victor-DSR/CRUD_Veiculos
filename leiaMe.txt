@@ -3,4 +3,10 @@
 - 2° Quais informações seriam necessarias para cadastrar veiculos, desenvolva no formato de três CRUDs diferentes.
 - 3° Adicione os IDs que seriam necessarios no banco de dados para estes três cruds.
 - 4° Crie o HTML com bootsrap basico deste crud. (CRUD Veiculos)
-- 5° Analise este código e encontre possiveis erros
+- 5° Analise este código e encontre possiveis erros.
+- 6° Adapte este código ao CRUD 2. (CRUD em PHP das tarefas anteriores.)
+- 7° Usando este código, crie um botão que vá para a tela de CRUD Manutenção com o ID do Veiculo.
+- 8° Adapte este HTML ao CRUD 3 Seguros. (HTML do CRUD 2)
+- 9° Usando este código, crie um botão que vá para a tela de CRUD Seguro com o ID do Veiculo.
+- 10° Adapte este código ao CRUD Seguro. (função cadastrar manutenção)
+- 11° Adapte este HTML ao Crud Seguro. 

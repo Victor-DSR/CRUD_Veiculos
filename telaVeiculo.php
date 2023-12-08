@@ -97,7 +97,7 @@
         }
 
         function excluirVeiculo(veiculoId) {
-    let tbody = document.getElementByName("veiculos");
+    let tbody = document.getElementById("veiculos");
     for (const tr of tbody.children) {
         if (tr.children[0].innerText == veiculoId) {
             tbody.removeChild(tr);
@@ -162,6 +162,20 @@
             btnExcluir.innerHTML = "Excluir";
             tdExcluir.appendChild(btnExcluir);
 
+            let tdManutencao = document.createElement("td");
+            let btnManutencao = document.createElement("button");
+            btnManutencao.addEventListener("click", irParaManutencao, false);
+            btnManutencao.paramId = veiculo.id;
+            btnManutencao.innerHTML = "Manutenção";
+            tdManutencao.appendChild(btnManutencao);
+
+            let tdSeguro = document.createElement("td");
+            let btnSeguro = document.createElement("button");
+            btnSeguro.addEventListener("click", irParaSeguro, false);
+            btnSeguro.paramId = veiculo.id;
+            btnSeguro.innerHTML = "Seguro";
+            tdSeguro.appendChild(btnSeguro);
+
             tr.appendChild(tdId);
             tr.appendChild(tdMarca);
             tr.appendChild(tdModelo);
@@ -169,8 +183,20 @@
             tr.appendChild(tdCor);
             tr.appendChild(tdEditar);
             tr.appendChild(tdExcluir);
+            tr.appendChild(tdManutencao);
+            tr.appendChild(tdSeguro);
             let tBody = document.getElementById("veiculos");
             tBody.appendChild(tr);
+        }
+
+        function irParaManutencao(evt) {
+        let idVeiculo = evt.currentTarget.paramId;
+        window.location.href = "telaManutencao.php?idVeiculo=" + idVeiculo;
+        }
+
+        function irParaSeguro(evt) {
+        let idVeiculo = evt.currentTarget.paramId;
+        window.location.href = "telaSeguro.php?idVeiculo=" + idVeiculo;
         }
 
         function alterarveiculo(veiculo) {
